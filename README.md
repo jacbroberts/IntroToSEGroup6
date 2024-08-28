@@ -16,12 +16,12 @@ Features:
     - Admin: oversee the actions of other users, approve or deny new accounts, and approve or deny new products.
 
 Team Members:
-  Jacob Roberts (jacroberts, jar1075, jacbroberts@gmail.com)
-  Ethan Mitchell (qwert619, ebm223, ebm223@msstate.edu)
-  Jacob Hollis (Jacob-MH, jmh1645, jmh1645@msstate.edu)
-  Matthew Rester (BurritoLord42, mcr460, mattrester@live.com)
-  Ashanti Cocroft (AshantiC, ac3585, ac3585@msstate.edu)
+  - Jacob Roberts (jacroberts, jar1075, jacbroberts@gmail.com)
+  - Ethan Mitchell (qwert619, ebm223, ebm223@msstate.edu)
+  - Jacob Hollis (Jacob-MH, jmh1645, jmh1645@msstate.edu)
+  - Matthew Rester (BurritoLord42, mcr460, mattrester@live.com)
+  - Ashanti Cocroft (AshantiC, ac3585, ac3585@msstate.edu)
 
 Languages and Techniques to be used:
-  Python
+  - Python
 
