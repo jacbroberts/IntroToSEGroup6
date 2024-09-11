@@ -23,8 +23,6 @@ Team Members:
   - Ashanti Cocroft (AshantiC, ac3585, ac3585@msstate.edu)
 
 Languages and Techniques to be used:
-  Frontend
-    -HTML
-  Backend
-    -Python
-    -SQL
+  Language: Python
+  Framework:Django
+  Database: SQlite
