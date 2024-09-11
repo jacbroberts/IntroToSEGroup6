@@ -26,4 +26,3 @@ Languages and Techniques to be used:
   Language: Python
   Framework:Django
   Database: SQlite
-
