@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Products View{% endblock %}
+
+{% block content %}
+<h2>Products</h2>
+<h3>Search</h3>
+<form method="GET">
+    <input type="text" name="search" value ="{{ query }}">
+    <button type="submit">Search</button>
+</form>
+
+<ul>
+    {% for product in products %}
+    <li>{{ product.name }} - ${{product.price}}</li>
+    {% endfor %}
+</ul>
+{% endblock %}
