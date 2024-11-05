@@ -23,6 +23,10 @@ Hi {{ user.username }}!
     {% csrf_token %}
     <button type="submit">Edit Seller Profile</button>
 </form>
+<form action="{% url 'store:cart_view' %}" method="get">
+    <button type="submit">Go to Cart</button>
+</form>
+
 
 {% else %}
 <p>You are not logged in</p>
