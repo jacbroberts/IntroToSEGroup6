@@ -10,7 +10,7 @@
             <li>
                 {{ item.product.name }} - {{ item.quantity }} x ${{ item.product.price }} 
                 = ${{ item.total_price }}
-                <form method="post" action="{% url 'remove_from_cart' item.id %}">
+                <form method="post" action="{% url 'store:remove_from_cart' item.id %}">
                     {% csrf_token %}
                     <button type="submit">Remove</button>
                 </form>

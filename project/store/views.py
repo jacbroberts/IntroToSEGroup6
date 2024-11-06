@@ -46,13 +46,13 @@ def add_to_cart(request, product_id):
     if not created:
         cart_item.quantity += 1
     cart_item.save()
-    return redirect('cart_view')
+    return redirect('store:cart_view')
 
 @login_required
 def remove_from_cart(request, item_id):
     cart_item = get_object_or_404(CartItem, id=item_id, user=request.user)
     cart_item.delete()
-    return redirect('cart_view')
+    return redirect('store:cart_view')
 
 def process_payment(request):
     if request.method == 'POST':
