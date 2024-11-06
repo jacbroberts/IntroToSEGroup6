@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Product Return</title>
+</head>
+<body>
+    <h1>Product Return Form</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <label for="product_name">Product Name:</label>
+        <input type="text" id="product_name" name="product_name" required><br><br>
+        <label for="reason">Reason for Return:</label>
+        <textarea id="reason" name="reason" required></textarea><br><br>
+        <button type="submit">Submit</button>
+    </form>
+    {% if message %}
+        <p>{{ message }}</p>
+    {% endif %}
+</body>
+</html>
