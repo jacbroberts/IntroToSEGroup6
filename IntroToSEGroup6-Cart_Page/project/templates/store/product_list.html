@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Products View{% endblock %}
+
+{% block content %}
+<h2>Products</h2>
+<h3>Search</h3>
+<form method="GET">
+    <input type="text" name="search" value ="{{ query }}">
+    <button type="submit">Search</button>
+</form>
+
+<ul>
+    {% for product in products %}
+    <li>{{ product.name }} - ${{product.price}}
+        <form action="{% url 'store:add_to_cart' product.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Add To Cart</button>
+        </form>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
