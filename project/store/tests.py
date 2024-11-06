@@ -1,6 +1,8 @@
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
+from django.urls import reverse
 from .models import Product
+from .forms import PaymentForm
 
 # Create your tests here.
 class StoreTestCase(TestCase):
@@ -140,5 +142,58 @@ class StoreTestCase(TestCase):
         self.assertContains(response, "Samsung")
         self.assertContains(response, "iPhone")
 
+
+class PaymentFormTests(TestCase):
+
+    def setUp(self):
+        # Valid data to reuse in tests
+        self.valid_data = {
+            'card_number': '1234567812345678',
+            'expiry_date': '12/25',
+            'cvv': '123',
+            'billing_address': '123 Main St',
+            'billing_city': 'New York',
+            'billing_state': 'NY',
+            'billing_zip': '10001',
+            'different_shipping': False,
+        }
+
+    def test_valid_payment_info(self):
+        """Test that valid payment info is processed successfully."""
+        response = self.client.post(reverse('store:process_payment'), data=self.valid_data)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Payment processed successfully.")
+
+    def test_invalid_card_number(self):
+        """Test that an invalid card number (not 16 digits) is rejected."""
+        invalid_data = self.valid_data.copy()
+        invalid_data['card_number'] = '1234'  # Invalid card number
+        response = self.client.post(reverse('store:process_payment'), data=invalid_data)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "card_number")  # Should contain error for card_number
+
+    def test_invalid_cvv(self):
+        """Test that an invalid CVV (not 3 digits) is rejected."""
+        invalid_data = self.valid_data.copy()
+        invalid_data['cvv'] = '12'  # Invalid CVV
+        response = self.client.post(reverse('store:process_payment'), data=invalid_data)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "cvv")  # Should contain error for cvv
+
+    def test_invalid_expiry_date(self):
+        """Test that an invalid expiry date is rejected."""
+        invalid_data = self.valid_data.copy()
+        invalid_data['expiry_date'] = '13/25'  # Invalid expiry date
+        response = self.client.post(reverse('store:process_payment'), data=invalid_data)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "expiry_date")  # Should contain error for expiry_date
+
+    def test_missing_billing_address(self):
+        """Test that a missing billing address is rejected."""
+        invalid_data = self.valid_data.copy()
+        invalid_data['billing_address'] = ''  # Missing billing address
+        response = self.client.post(reverse('store:process_payment'), data=invalid_data)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "billing_address")  # Should contain error for billing_address
 
 
