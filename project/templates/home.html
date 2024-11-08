@@ -26,6 +26,9 @@ Hi {{ user.username }}!
 <form action="{% url 'store:cart_view' %}" method="get">
     <button type="submit">Go to Cart</button>
 </form>
+<form action="{% url 'store:sold_products' %}" method="get">
+    <button type="submit">View Your Sold Items</button>
+</form>
 
 
 {% else %}

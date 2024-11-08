@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
-from .models import Product, CartItem
+from .models import Product, CartItem, SoldItems
 from django.contrib.auth.decorators import login_required
+from accounts.models import Seller, Customer
 
 # Create your views here.
 def index(request):
@@ -46,6 +47,8 @@ def add_to_cart(request, product_id):
     if not created:
         cart_item.quantity += 1
     cart_item.save()
+    
+    
     return redirect('store:cart_view')
 
 @login_required
@@ -58,5 +61,26 @@ def process_payment(request):
     if request.method == 'POST':
         # Here we would process payment details and save billing/shipping info
         # WIP *********
+        cart_items = CartItem.objects.filter(user=request.user)
+        for i in cart_items:
+            
+            SoldItems.objects.create(user=request.user,product=i.product,quantity=i.quantity,card_number=request.POST.get("card_number"),expire_date=request.POST.get("expiry_date"),cvv=request.POST.get("cvv"))
+        cart_items.delete()
         return HttpResponse("Payment processed successfully.")
     return HttpResponse("Invalid request.")
+
+@login_required
+def sold_products(request):
+    sold_products = SoldItems.objects.filter(product__seller__username__contains=request.user)
+    addresses = []
+    for i in sold_products:
+        addresses.append(Customer.objects.get(user=i.user))
+    zip_list = zip(sold_products, addresses)
+    return render(request,'store/sold_list.html',{'products':zip_list})
+
+@login_required
+def processed_product(request, item_id):
+    #seller has shipped item
+    product_item = SoldItems.objects.filter(product__seller__username=request.user).get(id=item_id)
+    product_item.delete()
+    return redirect('store:sold_products')
