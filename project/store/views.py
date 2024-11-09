@@ -8,8 +8,6 @@ from accounts.models import Seller, Customer
 def index(request):
     return HttpResponse("Hello, world. You're at the store index.")
 
-def login(request):
-    pass
 
 @login_required
 def product_list(request):

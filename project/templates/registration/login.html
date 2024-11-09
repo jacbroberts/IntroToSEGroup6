@@ -8,6 +8,7 @@
 <form method="post">
   {% csrf_token %}
   {{ form }}
+  <input type="hidden" name="next" value="{{ request.GET.next|default:'/' }}" />
   <button type="submit">Log In</button>
 </form>
 {% endblock %}
