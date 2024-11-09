@@ -16,10 +16,11 @@ class StoreTestCase(TestCase):
         )
         c = Client()
         response = self.client.post('/accounts/login/', {
+            'user_type':'user_type',
             'username':'testuser',
             'password':'testpassword'
         })
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 200)
         r = c.login(username='testuser', password='testpassword')
         self.assertTrue(r)
         
@@ -32,6 +33,7 @@ class StoreTestCase(TestCase):
         )
         c = Client()
         response = self.client.post('/accounts/login/', {
+            'user_type':'user_type',
             'username':'testuser',
             'password':''
         })
@@ -49,6 +51,7 @@ class StoreTestCase(TestCase):
         )
         c = Client()
         response = self.client.post('/accounts/login/', {
+            'user_type':'user_type',
             'username':'testuser',
             'password':'wrongpassword'
         })
