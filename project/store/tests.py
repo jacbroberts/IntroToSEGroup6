@@ -341,3 +341,73 @@ class StoreTestCase(TestCase):
 
         response = self.client.get(f"/store/sold/{id}")
         
+    def test_add_product_success(self):
+        User = get_user_model()
+        user = User.objects.create_user(username='testuser', password='testpassword')
+        client = Client()
+        self.client.force_login(user) # Force the user to be logged in
+
+        response = self.client.post('/store/add_product', {
+            'name':'testname',
+            'price':'30',
+            'remaining_quantity':'10',
+            'description':'testdescription'
+        })
+        self.assertEqual(response.status_code, 301)
+    
+    def test_add_product_price_2high(self):
+        User = get_user_model()
+        user = User.objects.create_user(username='testuser', password='testpassword')
+        client = Client()
+        self.client.force_login(user) # Force the user to be logged in
+
+        response = self.client.post('/store/add_product', {
+            'name':'testname',
+            'price':'101',
+            'remaining_quantity':'10',
+            'description':'testdescription'
+        })
+        self.assertEqual(response.status_code, 301)
+    
+    def test_add_product_quantity_2high(self):
+        User = get_user_model()
+        user = User.objects.create_user(username='testuser', password='testpassword')
+        client = Client()
+        self.client.force_login(user) # Force the user to be logged in
+
+        response = self.client.post('/store/add_product', {
+            'name':'testname',
+            'price':'30',
+            'remaining_quantity':'60',
+            'description':'testdescription'
+        })
+        self.assertEqual(response.status_code, 301)
+
+    def test_add_product_success_despite_noDesc(self):
+        User = get_user_model()
+        user = User.objects.create_user(username='testuser', password='testpassword')
+        client = Client()
+        self.client.force_login(user) # Force the user to be logged in
+
+        response = self.client.post('/store/add_product', {
+            'name':'testname',
+            'price':'30',
+            'remaining_quantity':'10',
+            'description':''
+        })
+        self.assertEqual(response.status_code, 301)
+    
+    def test_add_product_no_name(self):
+        User = get_user_model()
+        user = User.objects.create_user(username='testuser', password='testpassword')
+        client = Client()
+        self.client.force_login(user) # Force the user to be logged in
+
+        response = self.client.post('/store/add_product', {
+            'name':'',
+            'price':'30',
+            'remaining_quantity':'10',
+            'description':'testdescription'
+        })
+        self.assertEqual(response.status_code, 301)
+        

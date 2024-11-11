@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from .models import Product, CartItem, SoldItems
 from django.contrib.auth.decorators import login_required
 from accounts.models import Seller, Customer
+from .forms import ProductAddForm
+from django.urls import reverse
 
 # Create your views here.
 def index(request):
@@ -82,3 +84,40 @@ def processed_product(request, item_id):
     product_item = SoldItems.objects.filter(product__seller__username=request.user).get(id=item_id)
     product_item.delete()
     return redirect('store:sold_products')
+
+@login_required
+def add_product(request):
+    seller_instance = get_object_or_404(Seller, user=request.user)
+    product_instance = Product()
+
+    # If this is a POST request then process the Form data
+    if request.method == 'POST':
+
+        # Create a form instance and populate it with data from the request (binding):
+        form = ProductAddForm(request.POST)
+
+        # Check if the form is valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required (here we just write it to the model due_back field)
+            product_instance.name = form.cleaned_data['name']
+            product_instance.price = form.cleaned_data['price']
+            product_instance.remaining_quantity = form.cleaned_data['remaining_quantity']
+            product_instance.description = form.cleaned_data['description']
+            product_instance.save()
+
+            # redirect to a new URL:
+            return HttpResponseRedirect(reverse('home'))
+
+    # If this is a GET (or any other method) create the default form.
+    else:
+        form = ProductAddForm(initial={'name': ""})
+        form = ProductAddForm(initial={'price':""})
+        form = ProductAddForm(initial={'remaining_quantity':""})
+        form = ProductAddForm(initial={'description':""})
+
+    context = {
+        'form': form,
+        'product_instance': seller_instance,
+    }
+
+    return render(request, "store/add_product.html", context)
