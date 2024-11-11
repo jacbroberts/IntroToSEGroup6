@@ -5,6 +5,9 @@
 {% block content %}
 <h2>Products</h2>
 <h3>Search</h3>
+<form action="{% url 'home' %}" method="get">
+    <button type="submit">Home</button>
+</form>
 <form method="GET">
     <input type="text" name="search" value ="{{ query }}">
     <button type="submit">Search</button>

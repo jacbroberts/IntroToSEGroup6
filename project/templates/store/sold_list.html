@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Products View{% endblock %}
+
+{% block content %}
+<form action="{% url 'home' %}" method="get">
+    <button type="submit">Home</button>
+</form>
+<h2>Your Sold Products</h2>
+
+
+<ul>
+    {% for product, address in products %}
+    <div>
+        {{product.user.username}} bought {{product.quantity}} {{ product.product.name }} <br>
+        card number: {{product.card_number}} card expiration:{{product.expire_date}} card cvv: {{product.cvv}} <br>
+        address: {{address.street_address_1}} {{address.street_address_2}} {{address.city}}, {{address.state}} {{address.zip_code}} <br>
+        <form method="post" action="{% url 'store:remove_from_sold' product.id %}">
+            {% csrf_token %}
+            <button type="submit">Shipped Product</button>
+        </form>
+    </div>
+    <br>
+    {% endfor %}
+</ul>
+{% endblock %}
