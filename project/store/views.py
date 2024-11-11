@@ -61,11 +61,21 @@ def remove_from_cart(request, item_id):
     cart_item.delete()
     return redirect('store:cart_view')
 
+def validate_payment(request):
+    if request.method == 'POST':
+        form = PaymentForm(request.POST)
+        if form.is_valid():
+            # For now, we'll simply return a success message for valid data.
+            return HttpResponse("Payment processed successfully.")
+        else:
+            # If the form is invalid, render the form again with errors displayed.
+            return render(request, 'cart/cart.html', {'form': form})
+    else:
+        # If the request method isn't POST, handle it as invalid.
+        return HttpResponse("Invalid request.")
+
 def process_payment(request):
     if request.method == 'POST':
-
-        # Here we would process payment details and save billing/shipping info
-        # WIP *********
         cart_items = CartItem.objects.filter(user=request.user)
         for i in cart_items:
             

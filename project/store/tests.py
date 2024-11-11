@@ -163,41 +163,65 @@ class PaymentFormTests(TestCase):
 
     def test_valid_payment_info(self):
         """Test that valid payment info is processed successfully."""
-        response = self.client.post(reverse('store:process_payment'), data=self.valid_data)
+        User = get_user_model()
+        user = User.objects.create_user(username='testuser1', password='testpassword')
+        client = Client()
+        self.client.force_login(user) # Force the user to be logged in
+        response = self.client.post(reverse('store:validate_payment'), data=self.valid_data)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Payment processed successfully.")
 
     def test_invalid_card_number(self):
         """Test that an invalid card number (not 16 digits) is rejected."""
+        User = get_user_model()
+        user = User.objects.create_user(username='testuser2', password='testpassword')
+        client = Client()
+        self.client.force_login(user) # Force the user to be logged in
         invalid_data = self.valid_data.copy()
         invalid_data['card_number'] = '1234'  # Invalid card number
-        response = self.client.post(reverse('store:process_payment'), data=invalid_data)
+        response = self.client.post(reverse('store:validate_payment'), data=invalid_data)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "card_number")  # Should contain error for card_number
 
     def test_invalid_cvv(self):
         """Test that an invalid CVV (not 3 digits) is rejected."""
+        User = get_user_model()
+        user = User.objects.create_user(username='testuser3', password='testpassword')
+        client = Client()
+        self.client.force_login(user) # Force the user to be logged in
         invalid_data = self.valid_data.copy()
         invalid_data['cvv'] = '12'  # Invalid CVV
-        response = self.client.post(reverse('store:process_payment'), data=invalid_data)
+        response = self.client.post(reverse('store:validate_payment'), data=invalid_data)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "cvv")  # Should contain error for cvv
 
     def test_invalid_expiry_date(self):
         """Test that an invalid expiry date is rejected."""
+        User = get_user_model()
+        user = User.objects.create_user(username='testuser4', password='testpassword')
+        client = Client()
+        self.client.force_login(user) # Force the user to be logged in
         invalid_data = self.valid_data.copy()
         invalid_data['expiry_date'] = '13/25'  # Invalid expiry date
-        response = self.client.post(reverse('store:process_payment'), data=invalid_data)
+        response = self.client.post(reverse('store:validate_payment'), data=invalid_data)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "expiry_date")  # Should contain error for expiry_date
 
     def test_missing_billing_address(self):
         """Test that a missing billing address is rejected."""
-        invalid_data = self.valid_data.copy()
+        User = get_user_model()
+        user = User.objects.create_user(username='testuser5', password='testpassword')
+        client = Client()
+        client.force_login(user)  # Force the user to be logged in
+        
+        # Define valid data initially, then remove the billing address
+        invalid_data = self.valid_data.copy()  
         invalid_data['billing_address'] = ''  # Missing billing address
-        response = self.client.post(reverse('store:process_payment'), data=invalid_data)
+        
+        response = client.post(reverse('store:validate_payment'), data=invalid_data)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "billing_address")  # Should contain error for billing_address
+
 
 
     def test_sell(self):
