@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from .models import Product, CartItem, SoldItems
 from django.contrib.auth.decorators import login_required
 from accounts.models import Seller, Customer
+from .forms import ProductAddForm
+from django.urls import reverse
 
 # Create your views here.
 def index(request):
