@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .forms import SellerEditForm, CustomerEditForm
 
@@ -12,11 +12,38 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required, permission_required
-
+from .forms import CustomUserCreationForm, UserLoginForm
 class SignUpView(CreateView):
     form_class = UserCreationForm
     success_url = reverse_lazy("login")
     template_name = "registration/signup.html"
+
+def signup(request):
+    if request.method == "POST":
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            type = request.POST.get("user_type")
+            if type=="Customer":
+                return redirect('accounts:create_customer')
+            if type=="Seller":
+                return redirect('accounts:create_seller')
+            if type=="Admin":
+                return redirect('login')
+            
+    else:
+        form = CustomUserCreationForm()
+    return render(request, 'registration/signup.html', {'form':form})
+
+def login(request):
+    if request.method == "POST":
+        form = UserLoginForm(request.POST)
+        if form.is_valid():
+            form.login(request)
+            return redirect(request.POST.get('next'))
+    else:
+        form = UserLoginForm()
+    return render(request, 'registration/login.html', {'form':form})
 
 @login_required
 def make_seller(request):
@@ -34,8 +61,6 @@ def make_customer(request):
     else:
         c = Customer.objects.create(user=request.user, street_address_1="", street_address_2="", city="", state="", zip_code="")
         return HttpResponseRedirect(reverse('accounts:customer_edit'))
-    
-
 
 
 @login_required

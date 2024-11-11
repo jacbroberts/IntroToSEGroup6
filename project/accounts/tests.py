@@ -11,6 +11,7 @@ class RegistrationTestCase(TestCase):
         User = get_user_model()
         response = self.client.post('/accounts/signup/', {
             'username':'testuser',
+            'user_type':'Customer',
             'password1':'testpassword',
             'password2':'testpassword'
         })
@@ -22,11 +23,13 @@ class RegistrationTestCase(TestCase):
         User = get_user_model()
         response = self.client.post('/accounts/signup/', {
             'username':'testuser',
+            'user_type':'Customer',
             'password1':'testpassword',
             'password2':'testpassword'
         })
         response = self.client.post('/accounts/signup/', {
             'username':'testuser',
+            'user_type':'Customer',
             'password1':'testpassword',
             'password2':'testpassword'
         })
@@ -37,6 +40,7 @@ class RegistrationTestCase(TestCase):
     def test_registration_shortpassword(self):
         response = self.client.post('/accounts/signup/', {
             'username':'testuser',
+            'user_type':'Customer',
             'password1':'test',
             'password2':'test'
         })
@@ -45,6 +49,7 @@ class RegistrationTestCase(TestCase):
     def test_customer(self):
         response = self.client.post('/accounts/signup/', {
                 'username':'testuser',
+                'user_type':'Customer',
                 'password1':'testpassword',
                 'password2':'testpassword'
             })
@@ -61,6 +66,7 @@ class RegistrationTestCase(TestCase):
     def test_seller(self):
         response = self.client.post('/accounts/signup/', {
                 'username':'testuser',
+                'user_type':'Customer',
                 'password1':'testpassword',
                 'password2':'testpassword'
             })
