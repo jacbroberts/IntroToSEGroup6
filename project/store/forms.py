@@ -21,4 +21,5 @@ class ProductAddForm(forms.Form):
     price = forms.DecimalField(label="Price", max_value=100)
     remaining_quantity = forms.IntegerField(min_value=0)
     description = forms.CharField(required=False)
+    
 
