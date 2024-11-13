@@ -89,7 +89,7 @@ def process_payment(request):
 
 @login_required
 def sold_products(request):
-    sold_products = SoldItems.objects.filter(product__seller__username__contains=request.user).filter(shipped=False)
+    sold_products = SoldItems.objects.filter(product__seller__username__contains=request.user)
     addresses = []
     for i in sold_products:
         addresses.append(Customer.objects.get(user=i.user))
@@ -100,48 +100,30 @@ def sold_products(request):
 def processed_product(request, item_id):
     #seller has shipped item
     product_item = SoldItems.objects.filter(product__seller__username=request.user).get(id=item_id)
-    product_item.shipped = True
-    product_item.save()
+    product_item.delete()
     return redirect('store:sold_products')
-
-@login_required
-def view_bought(request):
-    #user can see the items they bought
-    products = SoldItems.objects.filter(user=request.user)
-    return render(request,'store/bought_list.html',{'products':products})
-    
 
 
 @login_required
 def add_product(request):
-    seller_instance = get_object_or_404(Seller, user=request.user)
-    product_instance = Product()
+    seller_instance = get_object_or_404(Seller, user=request.user)  # Retrieve the Seller instance
 
-    # If this is a POST request then process the Form data
     if request.method == 'POST':
+        form = ProductAddForm(request.POST, request.FILES)
 
-        # Create a form instance and populate it with data from the request (binding):
-        form = ProductAddForm(request.POST)
-
-        # Check if the form is valid:
         if form.is_valid():
-            # process the data in form.cleaned_data as required (here we just write it to the model due_back field)
+            product_instance = Product()
             product_instance.name = form.cleaned_data['name']
             product_instance.price = form.cleaned_data['price']
             product_instance.remaining_quantity = form.cleaned_data['remaining_quantity']
             product_instance.description = form.cleaned_data['description']
-            product_instance.seller = request.user
+            product_instance.image = form.cleaned_data['image'] if 'image' in form.cleaned_data else None
+            product_instance.seller = request.user  # Assign the User instance directly
+
             product_instance.save()
-
-            # redirect to a new URL:
             return HttpResponseRedirect(reverse('home'))
-
-    # If this is a GET (or any other method) create the default form.
     else:
-        form = ProductAddForm(initial={'name': ""})
-        form = ProductAddForm(initial={'price':""})
-        form = ProductAddForm(initial={'remaining_quantity':""})
-        form = ProductAddForm(initial={'description':""})
+        form = ProductAddForm()
 
     context = {
         'form': form,
@@ -149,6 +131,7 @@ def add_product(request):
     }
 
     return render(request, "store/add_product.html", context)
+
 
 # View to increase quantity
 def increase_quantity(request, item_id):
@@ -166,5 +149,3 @@ def decrease_quantity(request, item_id):
     else:
         item.delete()  # Remove item if quantity goes below 1
     return redirect(reverse('store:cart_view'))
-
-

@@ -3,7 +3,9 @@
 {% block title %}Products View{% endblock %}
 
 {% block content %}
-
+<form action="{% url 'home' %}" method="get">
+    <button type="submit">Home</button>
+</form>
 <h2>Your Sold Products</h2>
 
 

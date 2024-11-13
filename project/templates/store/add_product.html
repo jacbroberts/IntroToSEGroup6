@@ -4,9 +4,10 @@
 
 {% block content %}
 <h2>Add Product Info</h2>
-<form method="post">
+<form method="post" enctype="multipart/form-data">  <!-- Enables file uploads -->
     {% csrf_token %}
-    {{ form }}
+    {{ form.as_p }}  <!-- Display form fields in paragraph form -->
     <button type="submit">Add Product</button>
-  </form>
+</form>
 {% endblock %}
+

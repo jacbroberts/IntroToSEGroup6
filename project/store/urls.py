@@ -1,5 +1,6 @@
 from django.urls import path
-
+from django.conf import settings
+from django.conf.urls.static import static
 from . import views
 
 app_name = "store"
@@ -18,5 +19,4 @@ urlpatterns = [
     path("add_product/", views.add_product,name="add_product"),
     path('cart/increase/<int:item_id>/', views.increase_quantity, name='increase_quantity'),
     path('cart/decrease/<int:item_id>/', views.decrease_quantity, name='decrease_quantity'),
-    path('bought/',views.view_bought,name="view_bought")
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

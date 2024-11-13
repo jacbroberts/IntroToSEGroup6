@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+{% load static %}
+
+<body data-media-url="{% get_media_prefix%}"></body>
 
 {% block title %}Products View{% endblock %}
 
@@ -14,7 +17,11 @@
 <div class="product-list">
     {% for product in products %}
     <div class="product-item">
-        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+        {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+        {% else %}
+            <img src="{% static 'images/placeholder.png' %}" alt="No image available" class="product-image"> <!-- Fallback image -->
+        {% endif %}
         <div class="product-info">
             <h3>{{ product.name }}</h3>
             <p class="product-price">${{ product.price }}</p>

@@ -15,7 +15,7 @@
       <ul class="nav-links">
         <li><a href="/">Home</a></li>
         {% if user.is_authenticated %}
-        <form class="logout-form" action="{% url 'logout' %}" method="post">
+        <form action="{% url 'logout' %}" method="post">
           {% csrf_token %}
           <button type="submit">Logout</button>
       </form>

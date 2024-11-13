@@ -10,6 +10,7 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=10,decimal_places=2)
     remaining_quantity = models.PositiveIntegerField()
     description = models.TextField()
+    image = models.ImageField(upload_to='product_images/', blank=True, null=True)
 
 
 class CartItem(models.Model):
@@ -30,7 +31,6 @@ class SoldItems(models.Model):
     card_number = models.PositiveIntegerField()
     expire_date = models.CharField(max_length=5)
     cvv = models.IntegerField(validators=[MinValueValidator(100), MaxValueValidator(999)])
-    shipped = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.quantity} of {self.product.name}"

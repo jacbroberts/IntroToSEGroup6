@@ -15,11 +15,9 @@ class PaymentForm(forms.Form):
     shipping_state = forms.CharField(required=False)
     shipping_zip = forms.RegexField(regex=r'^\d{5}$', required=False)
 
-
 class ProductAddForm(forms.Form):
-    name = forms.CharField(label="Book Name", max_length=50,)
+    name = forms.CharField(label="Book Name", max_length=50)
     price = forms.DecimalField(label="Price", max_value=100)
     remaining_quantity = forms.IntegerField(min_value=0)
-    description = forms.CharField(required=False)
-    
-
+    description = forms.CharField(required=False, widget=forms.Textarea)
+    image = forms.ImageField(required=False)

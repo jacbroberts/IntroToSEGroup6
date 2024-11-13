@@ -118,22 +118,3 @@
 .add-to-cart-btn:hover {
   background-color: #555;
 }
-
-.logout-form {
-  display: inline;
-}
-.logout-form button {
-  font-family: Arial, sans-serif;
-  color: white;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  
-  text-decoration: none;
-  font-size: 16px;
-}
-
-.logout-form button:hover {
-  color: #ddd;
-}
