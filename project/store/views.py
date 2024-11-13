@@ -137,3 +137,20 @@ def add_product(request):
     }
 
     return render(request, "store/add_product.html", context)
+
+# View to increase quantity
+def increase_quantity(request, item_id):
+    item = get_object_or_404(CartItem, id=item_id)
+    item.quantity += 1
+    item.save()
+    return redirect(reverse('store:cart_view'))
+
+# View to decrease quantity
+def decrease_quantity(request, item_id):
+    item = get_object_or_404(CartItem, id=item_id)
+    if item.quantity > 1:
+        item.quantity -= 1
+        item.save()
+    else:
+        item.delete()  # Remove item if quantity goes below 1
+    return redirect(reverse('store:cart_view'))

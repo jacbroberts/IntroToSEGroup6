@@ -10,7 +10,23 @@
             <li>
                 {{ item.product.name }} - {{ item.quantity }} x ${{ item.product.price }} 
                 = ${{ item.total_price }}
-                <form method="post" action="{% url 'store:remove_from_cart' item.id %}">
+                
+                <!-- Form to decrease item quantity -->
+                <form method="post" action="{% url 'store:decrease_quantity' item.id %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit">-</button>
+                </form>
+                
+                <span>{{ item.quantity }}</span>
+                
+                <!-- Form to increase item quantity -->
+                <form method="post" action="{% url 'store:increase_quantity' item.id %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit">+</button>
+                </form>
+                
+                <!-- Form to remove item completely -->
+                <form method="post" action="{% url 'store:remove_from_cart' item.id %}" style="display: inline;">
                     {% csrf_token %}
                     <button type="submit">Remove</button>
                 </form>
