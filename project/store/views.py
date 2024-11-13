@@ -89,7 +89,7 @@ def process_payment(request):
 
 @login_required
 def sold_products(request):
-    sold_products = SoldItems.objects.filter(product__seller__username__contains=request.user)
+    sold_products = SoldItems.objects.filter(product__seller__username__contains=request.user).filter(shipped=False)
     addresses = []
     for i in sold_products:
         addresses.append(Customer.objects.get(user=i.user))
@@ -100,8 +100,16 @@ def sold_products(request):
 def processed_product(request, item_id):
     #seller has shipped item
     product_item = SoldItems.objects.filter(product__seller__username=request.user).get(id=item_id)
-    product_item.delete()
+    product_item.shipped = True
+    product_item.save()
     return redirect('store:sold_products')
+
+@login_required
+def view_bought(request):
+    #user can see the items they bought
+    products = SoldItems.objects.filter(user=request.user)
+    return render(request,'store/bought_list.html',{'products':products})
+    
 
 
 @login_required
@@ -158,3 +166,5 @@ def decrease_quantity(request, item_id):
     else:
         item.delete()  # Remove item if quantity goes below 1
     return redirect(reverse('store:cart_view'))
+
+
