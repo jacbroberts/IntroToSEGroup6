@@ -1,4 +1,9 @@
 <!-- cart/cart.html -->
+{% extends "base.html" %}
+
+{% block title %}Add Product{% endblock %}
+
+{% block content %}
 <h1>Your Cart</h1>
 
 {% if is_empty %}
@@ -105,7 +110,7 @@
 
 
 <!-- Link styled as a button to go back to the home page -->
-<a href="{% url 'home' %}" class="btn-home">Return to Home</a>
+<!-- <a href="{% url 'home' %}" class="btn-home">Return to Home</a> -->
 
 <style>
     .btn-home {
@@ -124,3 +129,5 @@
         background-color: #0056b3;
     }
 </style>
+
+{% endblock %}

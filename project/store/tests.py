@@ -222,8 +222,6 @@ class PaymentFormTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "billing_address")  # Should contain error for billing_address
 
-
-
     def test_sell(self):
         User = get_user_model()
         user = User.objects.create_user(username='testuser', password='testpassword')

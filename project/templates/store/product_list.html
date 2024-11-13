@@ -4,23 +4,26 @@
 
 {% block content %}
 <h2>Products</h2>
+
 <h3>Search</h3>
-<form action="{% url 'home' %}" method="get">
-    <button type="submit">Home</button>
-</form>
-<form method="GET">
-    <input type="text" name="search" value ="{{ query }}">
+<form method="GET" class="search-form">
+    <input type="text" name="search" value="{{ query }}" placeholder="Search for products">
     <button type="submit">Search</button>
 </form>
 
-<ul>
+<div class="product-list">
     {% for product in products %}
-    <li>{{ product.name }} - ${{product.price}}
-        <form action="{% url 'store:add_to_cart' product.id %}" method="post">
-            {% csrf_token %}
-            <button type="submit">Add To Cart</button>
-        </form>
-    </li>
+    <div class="product-item">
+        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+        <div class="product-info">
+            <h3>{{ product.name }}</h3>
+            <p class="product-price">${{ product.price }}</p>
+            <form action="{% url 'store:add_to_cart' product.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="add-to-cart-btn">Add To Cart</button>
+            </form>
+        </div>
+    </div>
     {% endfor %}
-</ul>
+</div>
 {% endblock %}

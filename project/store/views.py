@@ -62,11 +62,12 @@ def remove_from_cart(request, item_id):
     return redirect('store:cart_view')
 
 def validate_payment(request):
+    
     if request.method == 'POST':
         form = PaymentForm(request.POST)
         if form.is_valid():
             # For now, we'll simply return a success message for valid data.
-            return HttpResponse("Payment processed successfully.")
+            return render(request,'cart/success.html')
         else:
             # If the form is invalid, render the form again with errors displayed.
             return render(request, 'cart/cart.html', {'form': form})
@@ -74,6 +75,7 @@ def validate_payment(request):
         # If the request method isn't POST, handle it as invalid.
         return HttpResponse("Invalid request.")
 
+@login_required
 def process_payment(request):
     if request.method == 'POST':
         cart_items = CartItem.objects.filter(user=request.user)
@@ -81,7 +83,8 @@ def process_payment(request):
             
             SoldItems.objects.create(user=request.user,product=i.product,quantity=i.quantity,card_number=request.POST.get("card_number"),expire_date=request.POST.get("expiry_date"),cvv=request.POST.get("cvv"))
         cart_items.delete()
-        return HttpResponse("Payment processed successfully.")
+        return render(request,'cart/success.html')
+        
     return HttpResponse("Invalid request.")
 
 @login_required
@@ -119,6 +122,7 @@ def add_product(request):
             product_instance.price = form.cleaned_data['price']
             product_instance.remaining_quantity = form.cleaned_data['remaining_quantity']
             product_instance.description = form.cleaned_data['description']
+            product_instance.seller = request.user
             product_instance.save()
 
             # redirect to a new URL:
