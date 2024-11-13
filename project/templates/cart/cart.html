@@ -104,4 +104,23 @@
 </script>
 
 
+<!-- Link styled as a button to go back to the home page -->
+<a href="{% url 'home' %}" class="btn-home">Return to Home</a>
 
+<style>
+    .btn-home {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 16px;
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .btn-home:hover {
+        background-color: #0056b3;
+    }
+</style>
