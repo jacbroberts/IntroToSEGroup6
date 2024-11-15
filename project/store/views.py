@@ -12,7 +12,23 @@ from django.urls import reverse
 
 # Create your views here.
 def index(request):
-    return HttpResponse("Hello, world. You're at the store index.")
+    user = request.user
+    user_type = "none"
+    if user.is_authenticated:
+        
+        c = Customer.objects.filter(user=request.user).first()
+        
+        s = Seller.objects.filter(user=request.user).first()
+        if c != None:
+            if c.is_customer == True:
+                user_type = "customer"
+        if s != None:
+            if s.is_seller == True:
+                user_type = "seller"
+        
+    else:
+        user = None
+    return render(request, 'home.html',{'user':user,'user_type':user_type})
 
 
 @login_required

@@ -1,39 +1,35 @@
 {% extends "base.html" %}
 
+
+
 {% block title %}Home{% endblock %}
 
 {% block content %}
-{% if user.is_authenticated %}
-Hi {{ user.username }}!
-<br>
-<form action="{% url 'store:product_search' %}" method="post">
-    {% csrf_token %}
-    <button type="submit">View All Products</button>
-</form>
-<br>
+<div class="container">
+    {% if user.is_authenticated %}
+        <p>Hi {{ user.username }}!</p>
+        <form action="{% url 'store:product_search' %}" method="post">
+            {% csrf_token %}
+            <button type="submit">View All Products</button>
+        </form>
 
-<form action="{% url 'accounts:create_customer' %}" method="post">
-    {% csrf_token %}
-    <button type="submit">Edit Customer Profile</button>
-</form>
-<form action="{% url 'accounts:create_seller' %}" method="post">
-    {% csrf_token %}
-    <button type="submit">Edit Seller Profile</button>
-</form>
-<form action="{% url 'store:cart_view' %}" method="get">
-    <button type="submit">Go to Cart</button>
-</form>
-<form action="{% url 'store:sold_products' %}" method="get">
-    <button type="submit">View Your Sold Items</button>
-</form>
-<form action="{% url 'store:add_product' %}" method="get">
-    <button type="submit">Add Product</button>
-</form>
+        {% if user_type == "customer" %}
+            <form action="{% url 'store:cart_view' %}" method="get">
+                <button type="submit">Go to Cart</button>
+            </form>
+        {% endif %}
 
-
-{% else %}
-<p>You are not logged in</p>
-
-<a href="{% url 'accounts:signup' %}">Signup</a>
-{% endif %}
+        {% if user_type == "seller" %}
+            <form action="{% url 'store:sold_products' %}" method="get">
+                <button type="submit">View Your Sold Items</button>
+            </form>
+            <form action="{% url 'store:add_product' %}" method="get">
+                <button type="submit">Add Product</button>
+            </form>
+        {% endif %}
+    {% else %}
+        <p>You are not logged in</p>
+        <a href="{% url 'accounts:signup' %}">Signup</a>
+    {% endif %}
+</div>
 {% endblock %}

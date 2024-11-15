@@ -50,7 +50,7 @@ def make_seller(request):
     if Seller.objects.filter(user = request.user).exists():
         return HttpResponseRedirect(reverse('accounts:seller_edit'))
     else:
-        s = Seller.objects.create(user=request.user, business_name="")
+        s = Seller.objects.create(user=request.user, business_name="", is_seller=True)
         return HttpResponseRedirect(reverse('accounts:seller_edit'))
 
 
@@ -59,7 +59,7 @@ def make_customer(request):
     if Customer.objects.filter(user=request.user).exists():
         return HttpResponseRedirect(reverse('accounts:customer_edit'))
     else:
-        c = Customer.objects.create(user=request.user, street_address_1="", street_address_2="", city="", state="", zip_code="")
+        c = Customer.objects.create(user=request.user, street_address_1="", street_address_2="", city="", state="", zip_code="", is_customer=True)
         return HttpResponseRedirect(reverse('accounts:customer_edit'))
 
 
