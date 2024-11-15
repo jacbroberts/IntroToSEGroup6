@@ -5,7 +5,8 @@
   <meta charset="utf-8">
   <title>{% block title %}CoolCommerce{% endblock %}</title>
   {% load static %}
-  <link rel="stylesheet" href="{% static 'style.css' %}"> <!-- Link to the CSS file -->
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+  <link rel="stylesheet" href="{% static 'home_styles.css' %}">
 </head>
 
 <body>
@@ -14,15 +15,17 @@
       <h1 class="site-title">CoolCommerce</h1>
       <ul class="nav-links">
         <li><a href="/">Home</a></li>
-        {% if user.is_authenticated %}
-        <form action="{% url 'logout' %}" method="post">
-          {% csrf_token %}
-          <button type="submit">Logout</button>
-      </form>
-        {% else %}
-        <li><a href="/accounts/login">Login</a></li>
-        {% endif %}
         
+        {% if user.is_authenticated %}
+          <li>
+            <form action="{% url 'logout' %}" method="post" style="display: inline;">
+              {% csrf_token %}
+              <button type="submit" class="logout-button">Logout</button>
+            </form>
+          </li>
+        {% else %}
+          <li><a href="{% url 'login' %}">Login</a></li>
+        {% endif %}
       </ul>
     </nav>
   </header>

@@ -6,6 +6,7 @@ class Customer(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
     )
+    is_customer = models.BooleanField(default=False)
     street_address_1 = models.CharField(max_length=50, default="")
     street_address_2 = models.CharField(max_length=50, null=True)
     city = models.CharField(max_length=50, default="")
@@ -18,3 +19,4 @@ class Seller(models.Model):
         on_delete=models.CASCADE,
     )
     business_name = models.CharField(max_length=50, default="")
+    is_seller = models.BooleanField(default=False)
