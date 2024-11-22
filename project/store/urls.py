@@ -19,4 +19,5 @@ urlpatterns = [
     path("add_product/", views.add_product,name="add_product"),
     path('cart/increase/<int:item_id>/', views.increase_quantity, name='increase_quantity'),
     path('cart/decrease/<int:item_id>/', views.decrease_quantity, name='decrease_quantity'),
+    path('remove_product/', views.remove_product, name='remove_product')
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

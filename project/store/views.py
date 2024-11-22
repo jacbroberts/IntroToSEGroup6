@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 
 from .forms import PaymentForm
 
-from accounts.models import Seller, Customer
+from accounts.models import Seller, Customer, Admin
 from .forms import ProductAddForm
 from django.urls import reverse
 
@@ -17,14 +17,18 @@ def index(request):
     if user.is_authenticated:
         
         c = Customer.objects.filter(user=request.user).first()
-        
         s = Seller.objects.filter(user=request.user).first()
+        a = Admin.objects.filter(user=request.user).first()
+
         if c != None:
             if c.is_customer == True:
                 user_type = "customer"
         if s != None:
             if s.is_seller == True:
                 user_type = "seller"
+        if a != None:
+            if a.is_admin == True:
+                user_type = "admin"
         
     else:
         user = None
@@ -165,3 +169,10 @@ def decrease_quantity(request, item_id):
     else:
         item.delete()  # Remove item if quantity goes below 1
     return redirect(reverse('store:cart_view'))
+
+def remove_product(request, item_id):
+    item = get_object_or_404(CartItem, id=item_id)
+    item.delete()
+    return redirect('store:remove_product')
+
+    
