@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load static %}
+
+<body data-media-url="{% get_media_prefix%}"></body>
+
+{% block title %}Unapproved Users View{% endblock %}
+
+{% block content %}
+<h2>Approve Users</h2>
+
+    {% for user in unapproved_sellers %}
+    
+    <p>{{ user.user.username }}</p>
+    <form action="{% url 'store:approve_this_user' user.user.username %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="add-to-cart-btn">Approve</button>
+    </form>
+    {% endfor %}
+{% endblock %}

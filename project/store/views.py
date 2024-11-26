@@ -38,17 +38,34 @@ def index(request):
 @login_required
 def product_list(request):
     products = Product.objects.all()
-    return render(request, 'store/product_list.html',{'products':products})
+    a = Admin.objects.filter(user=request.user).first()
+    if a != None:
+        if a.is_admin == True:
+            user_type = "admin"
+        else:
+            user_type = "customer"
+    else:
+        user_type = "customer"
+    user_type = "admin"
+    return render(request, 'store/product_list.html',{'products':products,'user_type':user_type})
 
 @login_required
 def search_product(request):
     search_term = request.GET.get('search')
+    a = Admin.objects.filter(user=request.user).first()
+    if a != None:
+        if a.is_admin == True:
+            user_type = "admin"
+        else:
+            user_type = "customer"
+    else:
+        user_type = "customer"
     
     if search_term:
         products = Product.objects.filter(name__icontains=search_term)
     else:
         products = Product.objects.all()
-    return render(request,'store/product_list.html',{'products':products,'query':search_term})
+    return render(request,'store/product_list.html',{'products':products,'query':search_term,'user_type':user_type})
 
 @login_required
 def cart_view(request):
@@ -127,6 +144,8 @@ def processed_product(request, item_id):
 @login_required
 def add_product(request):
     seller_instance = get_object_or_404(Seller, user=request.user)  # Retrieve the Seller instance
+    if seller_instance.is_approved == False:
+        return redirect('home')
 
     if request.method == 'POST':
         form = ProductAddForm(request.POST, request.FILES)
@@ -154,6 +173,7 @@ def add_product(request):
 
 
 # View to increase quantity
+@login_required
 def increase_quantity(request, item_id):
     item = get_object_or_404(CartItem, id=item_id)
     item.quantity += 1
@@ -161,6 +181,7 @@ def increase_quantity(request, item_id):
     return redirect(reverse('store:cart_view'))
 
 # View to decrease quantity
+@login_required
 def decrease_quantity(request, item_id):
     item = get_object_or_404(CartItem, id=item_id)
     if item.quantity > 1:
@@ -170,9 +191,20 @@ def decrease_quantity(request, item_id):
         item.delete()  # Remove item if quantity goes below 1
     return redirect(reverse('store:cart_view'))
 
+@login_required
 def remove_product(request, item_id):
-    item = get_object_or_404(CartItem, id=item_id)
+    item = get_object_or_404(Product, id=item_id)
     item.delete()
-    return redirect('store:remove_product')
+    return redirect('store:product_search')
 
-    
+@login_required
+def unapproved_users(request):
+    s = Seller.objects.filter(is_approved=False)
+
+    return render(request, 'user_approve.html',{'unapproved_sellers':s})
+
+def approve_user(request, user_id):
+    seller = get_object_or_404(Seller, user__username=user_id)
+    seller.is_approved = True
+    seller.save()
+    return redirect(reverse('store:approve_user'))

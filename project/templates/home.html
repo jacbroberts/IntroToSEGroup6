@@ -29,12 +29,11 @@
         {% endif %}
         
         {% if user_type == "admin" %}
+            
             <form action="{% url 'store:approve_user' %}" method="get">
                 <button type="submit">Approve Users</button>
             </form>
-            <form action="{% url 'store:remove_product' %}" method="get">
-                <button type="submit">Remove Products</button>
-            </form>
+        {% endif %}
     {% else %}
         <p>You are not logged in</p>
         <a href="{% url 'accounts:signup' %}">Signup</a>

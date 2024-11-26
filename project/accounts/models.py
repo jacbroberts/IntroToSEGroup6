@@ -20,6 +20,7 @@ class Seller(models.Model):
     )
     business_name = models.CharField(max_length=50, default="")
     is_seller = models.BooleanField(default=False)
+    is_approved = models.BooleanField(default=False)
 
 class Admin(models.Model):
     user = models.OneToOneField(
