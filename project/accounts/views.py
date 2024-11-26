@@ -29,7 +29,6 @@ def signup(request):
             if type=="Seller":
                 return redirect('accounts:create_seller')
             if type=="Admin":
-                
                 return redirect('accounts:create_admin')
             
     else:
@@ -57,7 +56,7 @@ def make_seller(request):
     if Seller.objects.filter(user = request.user).exists():
         return HttpResponseRedirect(reverse('accounts:seller_edit'))
     else:
-        s = Seller.objects.create(user=request.user, business_name="", is_seller=True)
+        s = Seller.objects.create(user=request.user, business_name="", is_seller=True, is_approved=False)
         return HttpResponseRedirect(reverse('accounts:seller_edit'))
 
 
@@ -66,7 +65,7 @@ def make_customer(request):
     if Customer.objects.filter(user=request.user).exists():
         return HttpResponseRedirect(reverse('accounts:customer_edit'))
     else:
-        c = Customer.objects.create(user=request.user, street_address_1="", street_address_2="", city="", state="", zip_code="", is_customer=True, is_approved=False)
+        c = Customer.objects.create(user=request.user, street_address_1="", street_address_2="", city="", state="", zip_code="", is_customer=True)
         return HttpResponseRedirect(reverse('accounts:customer_edit'))
 
 

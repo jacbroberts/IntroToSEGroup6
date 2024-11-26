@@ -204,7 +204,16 @@ def unapproved_users(request):
     return render(request, 'user_approve.html',{'unapproved_sellers':s})
 
 def approve_user(request, user_id):
-    seller = get_object_or_404(Seller, user__username=user_id)
-    seller.is_approved = True
-    seller.save()
-    return redirect(reverse('store:approve_user'))
+    a = Admin.objects.filter(user=request.user).first()
+    if a != None:
+        if a.is_admin == True:
+            seller = get_object_or_404(Seller, user__username=user_id)
+            seller.is_approved = True
+            seller.save()
+            return redirect(reverse('store:approve_user'))
+        else:
+            return redirect(reverse('home'))
+    else:
+        return redirect(reverse('home'))
+    
+    
