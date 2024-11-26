@@ -7,7 +7,7 @@ from .forms import SellerEditForm, CustomerEditForm
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
-from .models import Seller, Customer
+from .models import Seller, Customer, Admin
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -29,7 +29,8 @@ def signup(request):
             if type=="Seller":
                 return redirect('accounts:create_seller')
             if type=="Admin":
-                return redirect('login')
+                
+                return redirect('accounts:create_admin')
             
     else:
         form = CustomUserCreationForm()
@@ -46,6 +47,12 @@ def login(request):
     return render(request, 'registration/login.html', {'form':form})
 
 @login_required
+def create_admin(request):
+    a = Admin.objects.create(user=request.user, is_admin=True)
+    a.save()
+    return HttpResponseRedirect(reverse('home'))
+
+@login_required
 def make_seller(request):
     if Seller.objects.filter(user = request.user).exists():
         return HttpResponseRedirect(reverse('accounts:seller_edit'))
@@ -59,7 +66,7 @@ def make_customer(request):
     if Customer.objects.filter(user=request.user).exists():
         return HttpResponseRedirect(reverse('accounts:customer_edit'))
     else:
-        c = Customer.objects.create(user=request.user, street_address_1="", street_address_2="", city="", state="", zip_code="", is_customer=True)
+        c = Customer.objects.create(user=request.user, street_address_1="", street_address_2="", city="", state="", zip_code="", is_customer=True, is_approved=False)
         return HttpResponseRedirect(reverse('accounts:customer_edit'))
 
 
